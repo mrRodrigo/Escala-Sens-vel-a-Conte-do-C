@@ -1,0 +1,1 @@
+# Escala-Sens-vel-a-Conte-do-C
