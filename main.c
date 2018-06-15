@@ -166,50 +166,83 @@ void keyboard(unsigned char key, int x, int y)
     glutPostRedisplay();
 }
 
-
 void calculaEnergia(){
     int i=0;
     int esq,dir,cima,baixo;
-        for(i=0; i<pic[2].height*pic[2].width; i++){
-            pic[2].img[i] ; // pixel a ser calculado
+        for(i=0; i<pic[0].height*pic[0].width; i++){
+            pic[0].img[i] ; // pixel a ser calculado
 
-            if (i - pic[2].width > 0){ //pixel acima de i
-              cima=  pic[2].img[i-pic[2].width]; //pixel acima de i
+
+            if (i - pic[0].width > 0){ //pixel acima de i
+              cima= i-pic[0].width; //pixel acima de i
             }else{
-             cima=   pic[2].img[ i + (i - ((pic[2].height * pic[2].width) - 1))]; //pixel acima de i
+              cima= i + (i - ((pic[0].height * pic[0].width) - 1)); //pixel acima de i
             }
 
-            if (i + pic[2].width < pic[2].height){ //pixel abaixo de i
-               baixo = pic[2].img[i + pic[2].width]; //pixel abaixo de i
+
+            if (i + pic[0].width < pic[0].height){ //pixel abaixo de i
+               baixo = i + pic[0].width; //pixel abaixo de i
             }else {
-               baixo= pic[2].img[i - (i - ((pic[2].height * pic[2].width) - 1)) ];
+               baixo= i - (i - ((pic[0].height * pic[0].width) - 1));
             }
 
 
             if (i - 1 > 0){ //pixel a esquerda de i
-                pic[2].img[i - 1] ; //pixel a esquerda de i
+                esq = i - 1 ; //pixel a esquerda de i
             }else {
-                pic[2].img[i + (pic.height - 1)];
+                esq = i + (pic[0].height - 1);
             }
 
-            if (i + 1 > pic[2].width){ //pixel a direita de i
-                pic[2].img[i + 1]; //pixel a direita de i
+            if (i + 1 > pic[0].width){ //pixel a direita de i
+               dir =  i + 1; //pixel a direita de i
             }else{
-                pic[2].img[i + (pic.height - 1)];
+               dir =  i + (pic[0].height - 1);
             }
+            verificaMascara(cima, baixo, esq, dir);
+            formulaEnergia (pic[0].img[cima],pic[0].img[baixo],pic[0].img[esq],pic[0].img[dir]);
         }
 }
 
-void formulaEnegia (RGB cima,RGB baixo,RGB esq,RGB dir){
-    int deltaX, deltaY;
-    deltaX = pow((dir.r − esq.r), 2) + pow((dir.b − esq.b), 2) + pow((dir.g − esq.g), 2);
-    // dir.b − esq.b ; //blue x
-    // dir.r − esq.r ; //red x
-    // dir.g − esq.g ; //green x
+void verificaMascara(int cima,int baixo, int esq, int dir){
 
-     //Gx(1,1)=Gx(2,1)−Gx(0,1)=114−92=22
-     //Bx(1,1)=Bx(2,1)−Bx(0,1)=75−92=−17
+    if (pic[1].img[cima].r > 0){
+                cima = -INFINITY;
+    }else {
+        if (pic[1].img[cima].g > 0){
+            cima = INFINITY;
+        }
+    }
+      if (pic[1].img[baixo].r > 0){
+                baixo = -INFINITY;
+    }else {
+        if (pic[1].img[baixo].g > 0){
+            baixo = INFINITY;
+        }
+    }
+      if (pic[1].img[esq].r > 0){
+                esq = -INFINITY;
+    }else {
+        if (pic[1].img[esq].g > 0){
+            esq = INFINITY;
+        }
+    }
+      if (pic[1].img[dir].r > 0){
+            dir = -INFINITY;
+    }else {
+        if (pic[1].img[dir].g > 0){
+            dir = INFINITY;
+        }
+    }
 
+}
+
+
+int formulaEnergia (RGB cima,RGB baixo,RGB esq,RGB dir){
+    int deltaX, deltaY,energia;
+    deltaX = pow((dir.r - esq.r), 2) + pow((dir.b - esq.b), 2) + pow((dir.g - esq.g), 2);
+    deltaY = pow((cima.r - baixo.r),2) + pow((cima.b - baixo.b),2) + pow ((cima.g - baixo.g),2);
+    energia = deltaX + deltaY;
+    return energia;
 }
 
 
