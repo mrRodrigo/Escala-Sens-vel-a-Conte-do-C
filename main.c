@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <string.h>		// Para usar strings
 #include <math.h>
+#include <limits.h>
 #ifdef WIN32
 #include <windows.h>    // Apenas para Windows
 #endif
@@ -156,8 +157,9 @@ void keyboard(unsigned char key, int x, int y)
         // ... (crie uma função para isso!)
 
         // Exemplo: pintando tudo de amarelo
-        for(int i=0; i<pic[2].height*pic[2].width; i++)
-            pic[2].img[i].r = pic[2].img[i].g = 255;
+      //  for(int i=0; i<pic[2].height*pic[2].width; i++)
+       //     pic[2].img[i].r = pic[2].img[i].g = 255;
+       calculaEnergia();
 
         // Chame uploadTexture a cada vez que mudar
         // a imagem (pic[2])
@@ -168,69 +170,78 @@ void keyboard(unsigned char key, int x, int y)
 
 void calculaEnergia(){
     int i=0;
+    int matriz [pic[0].height*pic[0].width];
     int esq,dir,cima,baixo;
+    unsigned long int custo = 0 ;
         for(i=0; i<pic[0].height*pic[0].width; i++){
             pic[0].img[i] ; // pixel a ser calculado
 
 
-            if (i - pic[0].width > 0){ //pixel acima de i
-              cima= i-pic[0].width; //pixel acima de i
+            if (i - pic[0].width  >= 0){ //pixel acima de i
+              cima= (i - pic[0].width)  ; //pixel acima de i
             }else{
-              cima= i + (i - ((pic[0].height * pic[0].width) - 1)); //pixel acima de i
+              cima= ( ((pic[0].height * pic[0].width) - 1) - i); //pixel acima de i
             }
 
 
-            if (i + pic[0].width < pic[0].height){ //pixel abaixo de i
+            if (i + pic[0].width <= pic[0].height){ //pixel abaixo de i
                baixo = i + pic[0].width; //pixel abaixo de i
             }else {
-               baixo= i - (i - ((pic[0].height * pic[0].width) - 1));
+               baixo=  (abs(pic[0].width -(pic[0].height * pic[0].width - i)));
             }
 
 
-            if (i - 1 > 0){ //pixel a esquerda de i
+            if (i - 1 >= 0){ //pixel a esquerda de i
                 esq = i - 1 ; //pixel a esquerda de i
             }else {
                 esq = i + (pic[0].height - 1);
             }
 
-            if (i + 1 > pic[0].width){ //pixel a direita de i
+            if (i + 1 <= pic[0].width){ //pixel a direita de i
                dir =  i + 1; //pixel a direita de i
             }else{
                dir =  i + (pic[0].height - 1);
             }
+
+           // custo = formulaEnergia(pic[0].img[196095],pic[0].img[511],pic[0].img[196606],pic[0].img[196990]);
+            custo = formulaEnergia(pic[0].img[cima],pic[0].img[baixo],pic[0].img[esq],pic[0].img[dir]);
             verificaMascara(cima, baixo, esq, dir);
-            formulaEnergia (pic[0].img[cima],pic[0].img[baixo],pic[0].img[esq],pic[0].img[dir]);
+            //matriz[i] = custo;
+            //printf("%d %S",i," a ");
+            //printf("%d %d %d %d",cima,baixo,esq, dir);
         }
+       printf("%lu",custo);
+        printf(" %d %d %d %d",cima,baixo,esq, dir);
 }
 
 void verificaMascara(int cima,int baixo, int esq, int dir){
 
     if (pic[1].img[cima].r > 0){
-                cima = -INFINITY;
+                cima = INT_MIN;
     }else {
         if (pic[1].img[cima].g > 0){
-            cima = INFINITY;
+            cima = INT_MAX;
         }
     }
       if (pic[1].img[baixo].r > 0){
-                baixo = -INFINITY;
+                baixo = INT_MIN;
     }else {
         if (pic[1].img[baixo].g > 0){
-            baixo = INFINITY;
+            baixo = INT_MAX;
         }
     }
       if (pic[1].img[esq].r > 0){
-                esq = -INFINITY;
+                esq = INT_MIN;
     }else {
         if (pic[1].img[esq].g > 0){
-            esq = INFINITY;
+            esq = INT_MAX;
         }
     }
       if (pic[1].img[dir].r > 0){
-            dir = -INFINITY;
+            dir = INT_MIN;
     }else {
         if (pic[1].img[dir].g > 0){
-            dir = INFINITY;
+            dir = INT_MAX;
         }
     }
 
