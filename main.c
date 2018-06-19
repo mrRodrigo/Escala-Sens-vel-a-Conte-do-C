@@ -167,12 +167,29 @@ void keyboard(unsigned char key, int x, int y)
     }
     glutPostRedisplay();
 }
+void seam (int * m){
+    int peso;
+    int i;
+    for(i=0; i<pic[0].height*pic[0].width; i++){
+        peso = verificaMascara(i,m[i]);
+       // pic[0].img[i]
 
-void calculaEnergia(){
+    }
+
+}
+
+int refMatriz (int * m){
+    for(i=0; i<pic[0].height*pic[0].width; i++){
+       
+    }
+}
+
+
+int calculaEnergia(){
     int i=0;
     int matriz [pic[0].height*pic[0].width];
     int esq,dir,cima,baixo;
-    unsigned long int custo = 0 ;
+    int custo = 0 ;
         for(i=0; i<pic[0].height*pic[0].width; i++){
             pic[0].img[i] ; // pixel a ser calculado
 
@@ -206,44 +223,26 @@ void calculaEnergia(){
            // custo = formulaEnergia(pic[0].img[196095],pic[0].img[511],pic[0].img[196606],pic[0].img[196990]);
             custo = formulaEnergia(pic[0].img[cima],pic[0].img[baixo],pic[0].img[esq],pic[0].img[dir]);
             verificaMascara(cima, baixo, esq, dir);
-            //matriz[i] = custo;
+            matriz[i] = custo;
             //printf("%d %S",i," a ");
             //printf("%d %d %d %d",cima,baixo,esq, dir);
+
         }
-       printf("%lu",custo);
+        printf("%d\n",custo);
         printf(" %d %d %d %d",cima,baixo,esq, dir);
+        return matriz;
 }
 
-void verificaMascara(int cima,int baixo, int esq, int dir){
+int verificaMascara(int i,int peso){
 
-    if (pic[1].img[cima].r > 0){
-                cima = INT_MIN;
+    if (pic[1].img[i].r > 0){
+                peso = INT_MIN;
     }else {
-        if (pic[1].img[cima].g > 0){
-            cima = INT_MAX;
+        if (pic[1].img[i].g > 0){
+            peso = INT_MAX;
         }
     }
-      if (pic[1].img[baixo].r > 0){
-                baixo = INT_MIN;
-    }else {
-        if (pic[1].img[baixo].g > 0){
-            baixo = INT_MAX;
-        }
-    }
-      if (pic[1].img[esq].r > 0){
-                esq = INT_MIN;
-    }else {
-        if (pic[1].img[esq].g > 0){
-            esq = INT_MAX;
-        }
-    }
-      if (pic[1].img[dir].r > 0){
-            dir = INT_MIN;
-    }else {
-        if (pic[1].img[dir].g > 0){
-            dir = INT_MAX;
-        }
-    }
+    return peso;
 
 }
 
