@@ -168,8 +168,17 @@ void keyboard(unsigned char key, int x, int y)
     glutPostRedisplay();
 }
 
+void seam(int * m){
 
-void matrizAcumulada(int m[pic[0].height*pic[0].width]){
+    for((i=pic[0].height - 1) * (pic[0].width -1); i<pic[0].height*pic[0].width; i++){
+
+
+    }
+}
+
+
+
+void matrizAcumulada(int * m){
     int pixSupEsq;
     int pixSupDir;
     int pixSup;
@@ -179,7 +188,6 @@ void matrizAcumulada(int m[pic[0].height*pic[0].width]){
     for(i=pic[0].width + 1; i<pic[0].height*pic[0].width; i++){
 
         if (!verificaMascara(i,&m[i])){
-
 
             pixSup = m[i - pic[0].width];
             menorPix = pixSup;
@@ -204,7 +212,7 @@ void matrizAcumulada(int m[pic[0].height*pic[0].width]){
 
 
     }
-    printf("  %d %s\n",m[0]," ASDQWE ");
+    //printf("  %d %s\n",m[pic[0].height*pic[0].width]," ASDQWE ");
 
 }
 
@@ -259,8 +267,8 @@ int calculaEnergia(){
             //printf("%d %d %d %d",cima,baixo,esq, dir);
 
         }
-        printf("%d\n",custo);
-        printf(" %d %d %d %d",cima,baixo,esq, dir);
+       // printf("%d\n",custo);
+      //  printf(" %d %d %d %d ",cima,baixo,esq, dir);
         matrizAcumulada(matriz);
         return matriz;
 }
