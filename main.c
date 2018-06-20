@@ -1,8 +1,8 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <string.h>		// Para usar strings
-#include <math.h>
 #include <limits.h>
+#include <string.h>		// Para usar strings
+
 #ifdef WIN32
 #include <windows.h>    // Apenas para Windows
 #endif
@@ -157,9 +157,9 @@ void keyboard(unsigned char key, int x, int y)
         // ... (crie uma função para isso!)
 
         // Exemplo: pintando tudo de amarelo
-      //  for(int i=0; i<pic[2].height*pic[2].width; i++)
-       //     pic[2].img[i].r = pic[2].img[i].g = 255;
-       calculaEnergia();
+        //for(int i=0; i<pic[2].height*pic[2].width; i++)
+        //    pic[2].img[i].r = pic[2].img[i].g = 255;
+        calculaEnergia();
 
         // Chame uploadTexture a cada vez que mudar
         // a imagem (pic[2])
@@ -167,22 +167,52 @@ void keyboard(unsigned char key, int x, int y)
     }
     glutPostRedisplay();
 }
-void seam (int * m){
-    int peso;
+
+
+void matrizAcumulada(int m[pic[0].height*pic[0].width]){
+    int pixSupEsq;
+    int pixSupDir;
+    int pixSup;
     int i;
-    for(i=0; i<pic[0].height*pic[0].width; i++){
-        peso = verificaMascara(i,m[i]);
-       // pic[0].img[i]
+    int menorPix = 0;
+
+    for(i=pic[0].width + 1; i<pic[0].height*pic[0].width; i++){
+
+        if (!verificaMascara(i,&m[i])){
+
+
+            pixSup = m[i - pic[0].width];
+            menorPix = pixSup;
+
+            if ( (i - pic[0].width) +1 <= pic[0].width){
+                pixSupDir = m[(i - pic[0].width) +1];
+                if (menorPix > pixSupDir) menorPix =pixSupDir;
+            }
+
+
+
+            if ( (i - pic[0].width) -1 <= 0){
+                pixSupEsq = m[(i - pic[0].width)-1];
+                if (menorPix > pixSupEsq) menorPix = pixSupEsq;
+            }
+
+            m[i] = menorPix + m[i];
+
+        }else{
+            //printf("  %d %s\n",m[i]," ASDQWE ");
+        }
+
 
     }
+    printf("  %d %s\n",m[0]," ASDQWE ");
 
 }
 
-int refMatriz (int * m){
-    for(i=0; i<pic[0].height*pic[0].width; i++){
-       
-    }
-}
+//int refMatriz (int * m){
+ //   for(i=0; i<pic[0].height*pic[0].width; i++){
+
+  //  }
+//}
 
 
 int calculaEnergia(){
@@ -222,27 +252,33 @@ int calculaEnergia(){
 
            // custo = formulaEnergia(pic[0].img[196095],pic[0].img[511],pic[0].img[196606],pic[0].img[196990]);
             custo = formulaEnergia(pic[0].img[cima],pic[0].img[baixo],pic[0].img[esq],pic[0].img[dir]);
-            verificaMascara(cima, baixo, esq, dir);
+
             matriz[i] = custo;
-            //printf("%d %S",i," a ");
+
+            //printf("\n %d %S",matriz[i]," a ");
             //printf("%d %d %d %d",cima,baixo,esq, dir);
 
         }
         printf("%d\n",custo);
         printf(" %d %d %d %d",cima,baixo,esq, dir);
+        matrizAcumulada(matriz);
         return matriz;
 }
 
-int verificaMascara(int i,int peso){
+int verificaMascara(int i,int * peso){
 
-    if (pic[1].img[i].r > 0){
-                peso = INT_MIN;
-    }else {
-        if (pic[1].img[i].g > 0){
-            peso = INT_MAX;
+    if ( pic[1].img[i].b == 0) {
+        if (pic[1].img[i].r > 0 && pic[1].img[i].g == 0 ){
+                *peso  = INT_MIN;
+                return 1;
+        }else {
+            if (pic[1].img[i].g > 0 && pic[1].img[i].r == 0){
+                *peso  = INT_MAX;
+                return 1;
+            }
         }
     }
-    return peso;
+    return 0;
 
 }
 
@@ -254,8 +290,6 @@ int formulaEnergia (RGB cima,RGB baixo,RGB esq,RGB dir){
     energia = deltaX + deltaY;
     return energia;
 }
-
-
 
 // Faz upload da imagem para a textura,
 // de forma a exibi-la na tela
