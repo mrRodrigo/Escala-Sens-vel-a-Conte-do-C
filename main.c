@@ -182,15 +182,40 @@ void seam(int * m){
     //m[pixMenorCaminho];
     int a;
     int aux = 0;
-   for (a= 0 ; a < pic[0].height; a++){
-        pic[2].img[abs((pixMenorCaminho  - (pic[0].width * aux)))].r = 255;
+     pic[2].img[pixMenorCaminho].r = 255;
+     for (a= 0 ; a < pic[0].height; a++){
+        int pixSup=0,menorPix=INT_MAX,pixSupDir=0,pixSupEsq=0,menorPos =0;
+
+
+            pixSup = m[abs(pixMenorCaminho - (pic[0].width * aux))];
+            menorPix = m[abs(pixMenorCaminho - (pic[0].width * aux))];
+            menorPos = abs(pixMenorCaminho - (pic[0].width * aux));
+
+            if ( abs(pixMenorCaminho - (pic[0].width * aux)) +1 <= pic[0].width){
+                pixSupDir = m[abs(pixMenorCaminho - (pic[0].width * aux)) +1];
+                if (menorPix > pixSupDir){
+                  menorPos = abs(pixMenorCaminho - (pic[0].width * aux)) +1;
+                  menorPix = m[abs(pixMenorCaminho - (pic[0].width * aux)) +1];
+                }
+            }
+            if ( abs(pixMenorCaminho - (pic[0].width * aux)) -1 >= 0){
+                pixSupEsq = m[(abs(pixMenorCaminho - (pic[0].width * aux))) -1];
+                if (menorPix > pixSupEsq){
+                     menorPos = (abs(pixMenorCaminho - (pic[0].width * aux))) -1;
+
+                     menorPix = m[abs(pixMenorCaminho - (pic[0].width * aux)) -1];
+                }
+            }
+            //printf("%d\n", menorPos);
+            pic[2].img[menorPos].r = 255;
         aux++;
+    }
+
    }
-   if (pixMenorCaminho == INT_MAX) printf("CCCCCCCC");
-   printf("%d",pixMenorCaminho);
-   novoValor = m[pixMenorCaminho];
-   *novoValor = INT_MAX;
-}
+
+  // printf("%d",pixMenorCaminho);
+
+
 
 
 
@@ -212,27 +237,18 @@ void matrizAcumulada(int * m){
                 pixSupDir = m[(i - pic[0].width) +1];
                 if (menorPix > pixSupDir) menorPix =pixSupDir;
             }
-
-
-
-            if ( (i - pic[0].width) -1 <= 0){
+            if ( (i - pic[0].width) -1 >= 0){
                 pixSupEsq = m[(i - pic[0].width)-1];
                 if (menorPix > pixSupEsq) menorPix = pixSupEsq;
             }
-
             m[i] = menorPix + m[i];
-
         }else{
             //printf("  %d %s\n",m[i]," ASDQWE ");
         }
-
-
     }
     //printf("  %d %s\n",m[pic[0].height*pic[0].width]," ASDQWE ");
     seam(&m);
-
 }
-
 
 
 int calculaEnergia(){
