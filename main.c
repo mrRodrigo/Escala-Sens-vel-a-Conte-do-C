@@ -169,11 +169,27 @@ void keyboard(unsigned char key, int x, int y)
 }
 
 void seam(int * m){
+    int i;
+    int pixMenorCaminho = INT_MAX;
+    int * novoValor;
 
-    for((i=pic[0].height - 1) * (pic[0].width -1); i<pic[0].height*pic[0].width; i++){
-
-
+    // achar menor caminho ( primeiro pixel do caminho)
+    for(((i=pic[0].height) * (pic[0].width) - pic[0].width); i<pic[0].height*pic[0].width; i++){
+        if (m[i] <= pixMenorCaminho) pixMenorCaminho = i;
     }
+
+    //for (i = 0; i< pic[0].)
+    //m[pixMenorCaminho];
+    int a;
+    int aux = 0;
+   for (a= 0 ; a < pic[0].height; a++){
+        pic[2].img[abs((pixMenorCaminho  - (pic[0].width * aux)))].r = 255;
+        aux++;
+   }
+   if (pixMenorCaminho == INT_MAX) printf("CCCCCCCC");
+   printf("%d",pixMenorCaminho);
+   novoValor = m[pixMenorCaminho];
+   *novoValor = INT_MAX;
 }
 
 
@@ -213,14 +229,10 @@ void matrizAcumulada(int * m){
 
     }
     //printf("  %d %s\n",m[pic[0].height*pic[0].width]," ASDQWE ");
+    seam(&m);
 
 }
 
-//int refMatriz (int * m){
- //   for(i=0; i<pic[0].height*pic[0].width; i++){
-
-  //  }
-//}
 
 
 int calculaEnergia(){
