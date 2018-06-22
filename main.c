@@ -175,52 +175,43 @@ void seam(int * m){
         }
     }
 
-
     printf ("%d", pixMenorCaminho);
     printf (" %d", m[pixMenorCaminho]);
 
-
-    //for (i = 0; i< pic[0].)
-    //m[pixMenorCaminho];
     int a;
     int aux = 0;
 
-    // pic[2].img[pixMenorCaminho].g = 255;
+    pic[2].img[pixMenorCaminho].r = 255;
 
-int pixSup=0,pixSupDir=0,pixSupEsq=0,menorPos =pixMenorCaminho;
-long int menorPix=LONG_MAX;
-     for (a= 0 ; a < pic[0].height; a++){
+    int pixSup=0,pixSupDir=0,pixSupEsq=0,posPixMenorPeso=pixMenorCaminho;
+    long int menorPesoPix=LONG_MAX;
+
+    for (a= 0 ; a < pic[0].height; a++){
+
+            if (posPixMenorPeso - (pic[0].width)>=0){
+                pixSup = m[posPixMenorPeso - (pic[0].width)];
+                menorPesoPix = m[posPixMenorPeso - (pic[0].width)];
+                posPixMenorPeso = abs(posPixMenorPeso - (pic[0].width ));
 
 
-            if (menorPos - (pic[0].width)>=0){
-                pixSup = m[menorPos - (pic[0].width)];
-                menorPix = m[menorPos - (pic[0].width)];
-                menorPos = abs(menorPos - (pic[0].width ));
-
-
-                pixSupDir = m[abs(menorPos - (pic[0].width )) +1];
-                if (menorPix >= pixSupDir){
-                  menorPos = abs(menorPos - (pic[0].width )) +1;
-                  menorPix = m[menorPos - (pic[0].width ) +1];
+                pixSupDir = m[abs(posPixMenorPeso - (pic[0].width )) +1];
+                if (menorPesoPix >= pixSupDir){
+                  posPixMenorPeso = abs(posPixMenorPeso - (pic[0].width )) +1;
+                  menorPesoPix = m[posPixMenorPeso - (pic[0].width ) +1];
                 }
 
-                pixSupEsq = m[(abs(menorPos - (pic[0].width ))) -1];
-                if (menorPix >= pixSupEsq){
-                     menorPos = (menorPos - (pic[0].width )) -1;
-                     menorPix = m[menorPos - (pic[0].width ) -1];
+                pixSupEsq = m[(abs(posPixMenorPeso - (pic[0].width ))) -1];
+                if (menorPesoPix >= pixSupEsq){
+                     posPixMenorPeso = (posPixMenorPeso - (pic[0].width )) -1;
+                     menorPesoPix = m[posPixMenorPeso - (pic[0].width ) -1];
                 }
-            printf("%d %d %d %s %d \n", pixSup, pixSupEsq, pixSupDir, " Menor -> ", menorPix);
-            //pixMenorCaminho = menorPos;
-            pic[2].img[menorPos].r = 255;
-            menorPix=LONG_MAX ;
-        aux++;
+            printf("%d %d %d %s %d \n", pixSup, pixSupEsq, pixSupDir, " Menor -> ", menorPesoPix);
+            pic[2].img[posPixMenorPeso].r = 255;
+            menorPesoPix=LONG_MAX ;
+            aux++;
+        }
     }
 }
-}
-
-  // printf("%d",pixMenorCaminho);
-
-
 
 void matrizAcumulada(int * m){
     int pixSupEsq;
@@ -297,9 +288,7 @@ int calculaEnergia(){
                dir =  i + (pic[0].height - 1);
             }
 
-           // custo = formulaEnergia(pic[0].img[196095],pic[0].img[511],pic[0].img[196606],pic[0].img[196990]);
             custo = formulaEnergia(pic[0].img[cima],pic[0].img[baixo],pic[0].img[esq],pic[0].img[dir]);
-
             matriz[i] = custo;
 
             //printf("\n %d %S",matriz[i]," a ");
@@ -315,13 +304,13 @@ int calculaEnergia(){
 int verificaMascara(int i,long int * peso){
 
         if (pic[1].img[i].r > 0 && pic[1].img[i].g < 100 ){
-                peso  = INT_MIN;
+                peso  = LONG_MIN;
                 pic[2].img[i].r = 255;
                 return 1;
         }else {
             if (pic[1].img[i].g > 0 && pic[1].img[i].r < 100){
-                peso  = INT_MAX;
-               pic[2].img[i].g = 255;
+                peso  = LONG_MAX;
+                pic[2].img[i].g = 255;
                 return 1;
             }
         }
