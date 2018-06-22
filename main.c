@@ -153,17 +153,8 @@ void keyboard(unsigned char key, int x, int y)
         // 1-3: seleciona a imagem correspondente (origem, máscara e resultado)
         sel = key - '1';
     if(key == 's') {
-        // Aplica o algoritmo e gera a saida em pic[2].img...
-        // ...
-        // ... (crie uma função para isso!)
 
-        // Exemplo: pintando tudo de amarelo
-        //for(int i=0; i<pic[2].height*pic[2].width; i++)
-        //    pic[2].img[i].r = pic[2].img[i].g = 255;
         calculaEnergia();
-
-        // Chame uploadTexture a cada vez que mudar
-        // a imagem (pic[2])
         uploadTexture();
     }
     glutPostRedisplay();
@@ -184,9 +175,7 @@ void seam(int * m){
         }
     }
 
-    for (int g = 0;g<pic[0].height * pic[0].width;g++){
-        // printf(" %ld ",m[g]);
-    }
+
     printf ("%d", pixMenorCaminho);
     printf (" %d", m[pixMenorCaminho]);
 
@@ -198,37 +187,36 @@ void seam(int * m){
 
     // pic[2].img[pixMenorCaminho].g = 255;
 
-int pixSup=0,menorPix=0,pixSupDir=0,pixSupEsq=0,menorPos =0;
+int pixSup=0,pixSupDir=0,pixSupEsq=0,menorPos =pixMenorCaminho;
+long int menorPix=LONG_MAX;
      for (a= 0 ; a < pic[0].height; a++){
 
 
+            if (menorPos - (pic[0].width)>=0){
+                pixSup = m[menorPos - (pic[0].width)];
+                menorPix = m[menorPos - (pic[0].width)];
+                menorPos = abs(menorPos - (pic[0].width ));
 
-            pixSup = m[abs(pixMenorCaminho - (pic[0].width * aux))];
-            menorPix = m[abs(pixMenorCaminho - (pic[0].width * aux))];
-            menorPos = abs(pixMenorCaminho - (pic[0].width * aux));
 
-            if (pixMenorCaminho - (pic[0].width * aux) +1 <= pic[0].width){
-                pixSupDir = m[abs(pixMenorCaminho - (pic[0].width * aux)) +1];
-                if (menorPix > pixSupDir){
-                  menorPos = abs(pixMenorCaminho - (pic[0].width * aux)) +1;
-                  menorPix = m[pixMenorCaminho - (pic[0].width * aux) +1];
+                pixSupDir = m[abs(menorPos - (pic[0].width )) +1];
+                if (menorPix >= pixSupDir){
+                  menorPos = abs(menorPos - (pic[0].width )) +1;
+                  menorPix = m[menorPos - (pic[0].width ) +1];
                 }
-            }
-            if ( pixMenorCaminho - (pic[0].width * aux) -1 >= 0){
-                pixSupEsq = m[(abs(pixMenorCaminho - (pic[0].width * aux))) -1];
-                if (menorPix > pixSupEsq){
-                     menorPos = (pixMenorCaminho - (pic[0].width * aux)) -1;
-                     menorPix = m[pixMenorCaminho - (pic[0].width * aux) -1];
+
+                pixSupEsq = m[(abs(menorPos - (pic[0].width ))) -1];
+                if (menorPix >= pixSupEsq){
+                     menorPos = (menorPos - (pic[0].width )) -1;
+                     menorPix = m[menorPos - (pic[0].width ) -1];
                 }
-            }
-            //printf("%d\n", menorPos);
+            printf("%d %d %d %s %d \n", pixSup, pixSupEsq, pixSupDir, " Menor -> ", menorPix);
             //pixMenorCaminho = menorPos;
             pic[2].img[menorPos].r = 255;
-
+            menorPix=LONG_MAX ;
         aux++;
     }
-
-   }
+}
+}
 
   // printf("%d",pixMenorCaminho);
 
